@@ -8,11 +8,13 @@ import { SelectField } from "@/components/ui/select";
 import { SubmitButton } from "@/components/ui/submit-button";
 import type { CreatorProfile, Profile } from "@/lib/types";
 import { NichePicker } from "@/components/niche-picker";
+import { usePreserveFormOnError } from "@/components/use-preserve-form";
 
 export function CreatorProfileForm({ profile, details }: { profile: Profile; details: CreatorProfile }) {
   const [state, action] = useActionState(updateCreatorProfileAction, initialActionState);
+  const { formRef, onSubmit } = usePreserveFormOnError<HTMLFormElement>(state.status === "error");
   const error = (name: string) => state.errors?.[name]?.[0];
-  return <form action={action} className="stack" noValidate>
+  return <form ref={formRef} action={action} className="stack" noValidate onSubmit={onSubmit}>
     {state.message ? <div className={`notice notice--${state.status}`} role={state.status === "error" ? "alert" : "status"}>{state.message}</div> : null}
     <FormField label="Public name" name="displayName" defaultValue={profile.display_name} required error={error("displayName")} />
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(13rem, 1fr))", gap: "1rem" }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { createCampaignAction } from "@/app/actions";
 import { initialActionState } from "@/lib/action-state";
@@ -10,16 +10,21 @@ import { SelectField } from "@/components/ui/select";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useUnsavedChanges } from "@/components/use-unsaved-changes";
 import { NichePicker } from "@/components/niche-picker";
+import { usePreserveFormOnError } from "@/components/use-preserve-form";
 
 export function CampaignForm() {
   const [state, action] = useActionState(createCampaignAction, initialActionState);
   const { onChange } = useUnsavedChanges();
-  useEffect(() => { if (state.status === "error") document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus(); }, [state]);
-  const error = (name: string) => state.errors?.[name]?.[0];
-  return <form action={action} className="stack" noValidate onChange={onChange}>
+  const [clientDescriptionError, setClientDescriptionError] = useState<string>();
+  const { formRef, onSubmit } = usePreserveFormOnError<HTMLFormElement>(state.status === "error");
+  useEffect(() => { if (state.status === "error") document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus(); }, [state.status]);
+  const error = (name: string) => name === "description" ? clientDescriptionError ?? state.errors?.[name]?.[0] : state.errors?.[name]?.[0];
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => { onSubmit(event); const description = String(new FormData(event.currentTarget).get("description") ?? "").trim(); if (description.length < 20) { event.preventDefault(); setClientDescriptionError("Add at least 20 characters so creators can judge the fit."); } else setClientDescriptionError(undefined); };
+  const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => { onChange(); if ((event.target as unknown as HTMLInputElement).name === "description") setClientDescriptionError(undefined); };
+  return <form ref={formRef} action={action} className="stack" noValidate onChange={handleChange} onSubmit={handleSubmit}>
     {state.message ? <div className={`notice notice--${state.status}`} role={state.status === "error" ? "alert" : "status"}>{state.message}</div> : null}
     <FormField label="Campaign title" name="title" required maxLength={100} error={error("title")} hint="Use a specific working title creators can recognize." />
-    <TextAreaField label="Campaign brief" name="description" required maxLength={3000} error={error("description")} hint="Describe the product, content angle, required talking points, and what success looks like." />
+    <TextAreaField label="Campaign brief" name="description" required minLength={20} maxLength={3000} error={error("description")} hint="Describe the product, content angle, required talking points, and what success looks like." />
     <NichePicker limit={3} error={error("niches")} />
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(13rem, 1fr))", gap: "1rem" }}>
       <SelectField name="platform" label="Platform" defaultValue="instagram" options={[{ value: "instagram", label: "Instagram" }, { value: "tiktok", label: "TikTok" }]} required />
