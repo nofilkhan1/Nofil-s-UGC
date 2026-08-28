@@ -23,3 +23,9 @@ $$;
 
 revoke all on function public.send_campaign_invite(uuid, uuid) from public;
 grant execute on function public.send_campaign_invite(uuid, uuid) to authenticated;
+
+-- Brands may browse completed creator profiles without an existing application.
+create policy "Brands can discover creator details" on public.creator_profiles
+  for select to authenticated using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'brand')
+  );
