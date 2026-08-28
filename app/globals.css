@@ -180,6 +180,13 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .brand-dashboard-checklist { display: grid; gap: 1rem; }
 .brand-dashboard-checklist__row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.85rem; border-top: 1px solid var(--color-border); padding-top: 0.8rem; }
 .brand-dashboard-checklist__number { display: inline-grid; width: 1.75rem; height: 1.75rem; place-items: center; border-radius: 50%; background: #f0efff; color: var(--color-primary-dark); font-weight: 850; }
+.campaign-summary { display: grid; gap: 1.25rem; margin-top: 1.25rem; }
+.campaign-summary__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.campaign-summary__stats > div { display: grid; gap: 0.2rem; padding: 0.9rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-muted); }
+.campaign-summary__stats strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.campaign-summary__stats span, .campaign-summary__recent > span { color: var(--color-text-muted); font-size: 0.8rem; }
+.campaign-summary__recent { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+.campaign-summary__recent a { font-weight: 750; }
 .creator-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .creator-card { display: grid; gap: 1rem; min-width: 0; }
 .creator-card__bio { color: var(--color-muted-ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
@@ -332,6 +339,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 @media (max-width: 760px) {
   .brand-dashboard-hero { display: grid; align-items: start; }
   .brand-dashboard-progress { grid-template-columns: 1fr; }
+  .campaign-summary__stats { grid-template-columns: 1fr; }
   .brand-dashboard-checklist__row { grid-template-columns: auto 1fr; }
   .brand-dashboard-checklist__row > :last-child { grid-column: 2; justify-self: start; }
   .app-shell { display: block; }
