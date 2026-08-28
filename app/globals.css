@@ -285,10 +285,11 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .empty-state { min-height: 14rem; display: grid; place-items: center; text-align: center; }
 .detail-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr); gap: 1rem; align-items: start; }
 .application-quote-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+.message-page { width: min(100%, 50rem); margin-inline: auto; gap: 1.2rem; }
 .message-thread { display: grid; gap: 0.75rem; max-height: 32rem; overflow-y: auto; }
-.message-bubble { width: min(85%, 34rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #f8fafc; padding: 0.8rem 1rem; }
-.message-bubble--mine { justify-self: end; border-color: var(--color-primary); background: var(--color-primary); color: white; }
-.message-bubble--mine time { color: rgba(255,255,255,0.75); }
+.message-bubble { width: min(68%, 34rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #f8fafc; padding: 0.8rem 1rem; }
+.message-bubble--mine { justify-self: end; border-color: #7168f5; background: #7168f5; color: white; font-weight: 600; }
+.message-bubble--mine time { color: rgba(255,255,255,0.72); font-weight: 500; }
 .message-bubble--other { justify-self: start; }
 .message-bubble__sender { display: block; font-size: 0.76rem; margin-bottom: 0.25rem; }
 .message-bubble p { margin: 0.3rem 0; white-space: pre-wrap; }
