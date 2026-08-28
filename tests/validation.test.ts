@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { applicationSchema, campaignSchema, signupSchema } from "@/lib/validation";
 import { filterAndSortCampaigns } from "@/lib/campaign-filters";
+import { countNicheMatches } from "@/lib/niche-matching";
 
 describe("campaign validation", () => {
   const valid = {
@@ -34,6 +35,10 @@ describe("account and application validation", () => {
     const results = filterAndSortCampaigns([{ ...base, title: "Skincare launch", description: "A beauty brief", created_at: "2026-01-01", application_count: 1 }, { ...base, id: "00000000-0000-0000-0000-000000000003", title: "Gaming setup", description: "Tech products", created_at: "2026-02-01", application_count: 9 }], "beauty", "popular");
     expect(results).toHaveLength(1);
     expect(results[0].title).toBe("Skincare launch");
+  });
+
+  it("counts overlapping campaign and creator niches", () => {
+    expect(countNicheMatches(["Beauty & Fashion", "Travel"], ["Travel", "Gaming"])).toBe(1);
   });
   it("does not allow admin as a signup role", () => {
     expect(signupSchema.safeParse({ name: "Admin", email: "admin@example.com", password: "password123", role: "admin" }).success).toBe(false);
