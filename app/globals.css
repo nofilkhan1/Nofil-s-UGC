@@ -14,7 +14,7 @@
   --color-danger: #c63e4f;
   --color-border: #dde3eb;
   --color-border-strong: #b8c2ce;
-  --color-focus: #2d6cdf;
+  --color-focus: var(--color-primary);
   --color-scroll-track: #edf1f6;
   --color-scroll-thumb: #aeb8c5;
   --color-scroll-thumb-hover: #7d8998;
@@ -138,7 +138,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 .input:hover, .textarea:hover, .select-trigger:hover { border-color: var(--color-border-strong); }
-.input:focus, .textarea:focus, .select-trigger:focus { border-color: var(--color-focus); outline: none; box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.18); }
+.input:focus, .textarea:focus, .select-trigger:focus { border-color: var(--color-focus); outline: none; box-shadow: 0 0 0 3px rgba(90, 79, 243, 0.18); }
 .input[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--color-danger); }
 .textarea { min-height: 8rem; resize: none; }
 .resize-none { resize: none; }
@@ -153,13 +153,15 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .badge--success { color: #10684e; background: #ecfaf5; border-color: #b9e3d6; }
 .badge--warning { color: #8d4a12; background: #fff7e9; border-color: #f1d19d; }
 .badge--danger { color: #9c3040; background: #fff0f2; border-color: #efbdc5; }
+.badge--neutral { color: var(--color-muted-ink); background: #f3f5f8; border-color: var(--color-border-strong); }
+.badge--active { color: white; background: var(--color-primary); border-color: var(--color-primary); }
 .badge--instagram { color: #4338ca; background: #f0efff; border-color: #cdc9ff; }
 .badge--tiktok { color: #a13c28; background: #fff1ed; border-color: #f3c5bb; }
 .niche-badges, .niche-picker__options { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .niche-picker { display: grid; gap: 0.65rem; border: 0; padding: 0; margin: 0; }
 .niche-picker legend { font-weight: 750; font-size: 0.86rem; }
-.niche-pill { display: inline-flex; align-items: center; cursor: pointer; border: 1px solid var(--color-border-strong); border-radius: 999px; padding: 0.42rem 0.7rem; font-size: 0.8rem; font-weight: 700; }
-.niche-pill:has(input:checked) { background: #eeefff; border-color: var(--color-primary); color: var(--color-primary-dark); }
+.niche-pill { display: inline-flex; align-items: center; cursor: pointer; min-height: 1.7rem; border: 1px solid var(--color-border-strong); border-radius: 999px; padding: 0.25rem 0.6rem; font-size: 0.72rem; font-weight: 800; }
+.niche-pill:has(input:checked) { background: #f0efff; border-color: var(--color-primary); color: var(--color-primary-dark); }
 .niche-pill input { accent-color: var(--color-primary); margin-right: 0.4rem; }
 
 .campaign-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
@@ -251,6 +253,9 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .notification-card__top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; color: var(--color-ink); }
 .notification-card__copy small { color: var(--color-muted-ink); font-weight: 500; }
 .notification-dot { width: 0.55rem; height: 0.55rem; flex: none; border-radius: 50%; background: var(--color-danger); }
+.empty-state { min-height: 14rem; display: grid; place-items: center; text-align: center; }
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr); gap: 1rem; align-items: start; }
+.application-quote-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -273,6 +278,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   .nav-link { white-space: nowrap; }
   .app-topbar { position: static; }
   .steps { grid-template-columns: 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 580px) {
@@ -284,6 +290,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   .casting-card { width: 19rem; }
   .metric-strip { grid-template-columns: 1fr; }
   .app-content { padding-inline: 1rem; }
+  .application-quote-grid { grid-template-columns: 1fr; }
+  [style*="minmax(18rem"] { grid-template-columns: 1fr !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
