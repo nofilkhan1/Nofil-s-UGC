@@ -27,7 +27,7 @@ export default async function BrandCampaignDetail({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ created?: string }>;
+  searchParams: Promise<{ created?: string; updated?: string }>;
 }) {
   const viewer = await requireRole("brand");
   const { id } = await params;
@@ -67,6 +67,7 @@ export default async function BrandCampaignDetail({
             creators.
           </div>
         ) : null}
+        {query.updated === "1" ? <div className="notice notice--success" role="status" style={{ marginTop: "1rem" }}>Campaign updated.</div> : null}
         <div
           className="cluster"
           style={{ justifyContent: "space-between", marginTop: "1rem" }}
@@ -83,7 +84,7 @@ export default async function BrandCampaignDetail({
               {typedCampaign.start_date} to {typedCampaign.end_date} · {typedCampaign.view_count ?? 0} views
             </p>
           </div>
-          <StatusBadge status={typedCampaign.status} />
+          <div className="cluster"><Link className="button button--secondary" href={`/brand/campaigns/${typedCampaign.id}/edit`}>Edit campaign</Link><StatusBadge status={typedCampaign.status} /></div>
         </div>
         <div className="panel">
           <p style={{ whiteSpace: "pre-wrap", marginBottom: 0 }}>

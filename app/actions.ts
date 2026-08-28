@@ -36,6 +36,23 @@ export async function createCampaignAction(_state: ActionState, formData: FormDa
   redirect(`/brand/campaigns/${data.id}?created=1`);
 }
 
+export async function updateCampaignAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const viewer = await requireRole("brand");
+  const campaignId = String(formData.get("campaignId") ?? "");
+  const parsed = campaignSchema.safeParse({
+    title: formData.get("title"), description: formData.get("description"), platform: formData.get("platform"),
+    contentFormat: formData.get("contentFormat"), postCount: formData.get("postCount"), startDate: formData.get("startDate"), endDate: formData.get("endDate"),
+    niches: formData.getAll("niches"),
+  });
+  if (!/^[0-9a-f-]{36}$/i.test(campaignId)) return { status: "error", message: "Invalid campaign." };
+  if (!parsed.success) return validationState(parsed.error);
+  const supabase = await createClient();
+  const { error } = await supabase.from("campaigns").update({ title: parsed.data.title, description: parsed.data.description, platform: parsed.data.platform, content_format: parsed.data.contentFormat, post_count: parsed.data.postCount, start_date: parsed.data.startDate, end_date: parsed.data.endDate, niches: parsed.data.niches }).eq("id", campaignId).eq("brand_id", viewer.user.id);
+  if (error) return { status: "error", message: "The campaign could not be updated. Your entries are still here—try again." };
+  revalidatePath("/brand/campaigns"); revalidatePath(`/brand/campaigns/${campaignId}`);
+  redirect(`/brand/campaigns/${campaignId}?updated=1`);
+}
+
 export async function updateCampaignStatusAction(_state: ActionState, formData: FormData): Promise<ActionState> {
   const viewer = await requireRole("brand");
   const campaignId = String(formData.get("campaignId") ?? ""); const status = String(formData.get("status") ?? "");

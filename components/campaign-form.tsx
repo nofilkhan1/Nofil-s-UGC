@@ -33,6 +33,6 @@ export function CampaignForm() {
     </div>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(13rem, 1fr))", gap: "1rem" }}><DateField name="startDate" label="Start date" required aria-invalid={error("startDate") ? "true" : undefined} /><DateField name="endDate" label="End date" required aria-invalid={error("endDate") ? "true" : undefined} /></div>
     {error("endDate") ? <p className="field__error" role="alert">{error("endDate")}</p> : null}
-    <div className="cluster"><SubmitButton>Publish campaign</SubmitButton><Link href="/brand/campaigns" className="button button--ghost">Cancel</Link></div>
+    <div className="cluster"><SubmitButton>Save draft</SubmitButton><Link href="/brand/campaigns" className="button button--ghost">Cancel</Link></div>
   </form>;
 }

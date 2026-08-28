@@ -93,10 +93,7 @@ export default async function BrandCampaignsPage() {
                 meta={`${campaign.applications?.[0]?.count ?? 0} applicants · ${campaign.view_count ?? 0} views`}
               />
               {campaign.status === "draft" || campaign.status === "live" ? (
-                <CampaignLifecycleForm
-                  campaignId={campaign.id}
-                  status={campaign.status}
-                />
+                <div className="cluster"><Link className="button button--ghost" href={`/brand/campaigns/${campaign.id}/edit`}>Edit campaign</Link><CampaignLifecycleForm campaignId={campaign.id} status={campaign.status} /></div>
               ) : null}
             </div>
           ))}
