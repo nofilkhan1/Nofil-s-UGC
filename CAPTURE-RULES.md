@@ -12,14 +12,11 @@ The hook is installed and trusted. It fires on:
 - `UserPromptSubmit` — every prompt you send
 - `Stop` — every time the agent finishes a turn
 
-It writes each event automatically to its own file:
-
-- `.agent-logs/<timestamp>_prompt_<session-id>.md` for a submitted prompt
-- `.agent-logs/<timestamp>_response_<session-id>.md` for a final response
-
-Response files include a `reply_to` field when their matching prompt file is
-available. **You do not need to manually copy/paste prompts or responses anywhere
-— the hook does this.**
+It writes each prompt and its final response to one new exchange file:
+`.agent-logs/<timestamp>_exchange_<session-id>.md`. The prompt is written when it
+is submitted; its final response is appended to the same file. A later prompt always
+gets a new file. **You do not need to manually copy/paste prompts or responses
+anywhere — the hook does this.**
 
 ## What must NOT happen
 
@@ -30,10 +27,10 @@ available. **You do not need to manually copy/paste prompts or responses anywher
 
 ## Format (already produced by the hook)
 
-Each event file has YAML frontmatter (`event_type`, `session_id`, `date`,
-`timestamp`, `author`, `model`, `tool`, `project`, and optionally `reply_to`),
-followed by one `[LOG_ENTRY type=PROMPT ...]` or `[LOG_ENTRY type=RESPONSE ...]`
-block with a timestamp and model name.
+Each exchange file has YAML frontmatter (`event_type`, `session_id`, `date`,
+`author`, `model`, `tool`, `project`, `total_entries`, and `first_prompt_time`),
+followed by a `[LOG_ENTRY type=PROMPT ...]` block and its matching
+`[LOG_ENTRY type=RESPONSE ...]` block, each with a timestamp and model name.
 
 ## Verification already done
 
