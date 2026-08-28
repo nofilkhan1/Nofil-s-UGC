@@ -134,3 +134,9 @@ export async function sendMessageAction(_state: ActionState, formData: FormData)
   revalidatePath(`/messages/${applicationId}`);
   return { status: "success", message: "Message sent." };
 }
+
+export async function markMessagesRead(applicationId: string) {
+  const viewer = await requireViewer();
+  const supabase = await createClient();
+  await supabase.from("messages").update({ read_at: new Date().toISOString() }).eq("application_id", applicationId).neq("sender_id", viewer.user.id).is("read_at", null);
+}

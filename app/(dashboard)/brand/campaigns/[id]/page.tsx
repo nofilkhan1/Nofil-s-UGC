@@ -51,6 +51,8 @@ export default async function BrandCampaignDetail({
     .order("created_at", { ascending: false });
   const typedCampaign = campaign as Campaign;
   const applicants = (applications ?? []) as Applicant[];
+  const unreadRows = applicants.length ? await supabase.from("messages").select("application_id").in("application_id", applicants.map((application) => application.id)).is("read_at", null).neq("sender_id", viewer.user.id) : { data: [] };
+  const unreadApplicationIds = new Set((unreadRows.data ?? []).map((message) => message.application_id));
   return (
     <div className="stack" style={{ gap: "1.7rem" }}>
       <div>
@@ -251,7 +253,7 @@ export default async function BrandCampaignDetail({
                             className="button button--secondary"
                             href={`/messages/${application.id}`}
                           >
-                            Message
+                            Message{unreadApplicationIds.has(application.id) ? <span className="message-unread-dot" aria-label="Unread messages" /> : null}
                           </Link>
                         ) : null}
                       </div>

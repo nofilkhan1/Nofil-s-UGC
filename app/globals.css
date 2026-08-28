@@ -287,10 +287,15 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .application-quote-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
 .message-thread { display: grid; gap: 0.75rem; max-height: 32rem; overflow-y: auto; }
 .message-bubble { width: min(85%, 34rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #f8fafc; padding: 0.8rem 1rem; }
-.message-bubble--mine { justify-self: end; border-color: #c9c4ff; background: #f0efff; }
+.message-bubble--mine { justify-self: end; border-color: var(--color-primary); background: var(--color-primary); color: white; }
+.message-bubble--mine time { color: rgba(255,255,255,0.75); }
+.message-bubble--other { justify-self: start; }
+.message-bubble__sender { display: block; font-size: 0.76rem; margin-bottom: 0.25rem; }
 .message-bubble p { margin: 0.3rem 0; white-space: pre-wrap; }
 .message-bubble time { color: var(--color-muted-ink); font-size: 0.72rem; }
 .message-composer { display: grid; gap: 0.65rem; }
+.message-composer .textarea { min-height: 5.5rem; }
+.message-unread-dot { display: inline-block; width: 0.45rem; height: 0.45rem; margin-left: 0.35rem; border-radius: 50%; background: var(--color-danger); vertical-align: middle; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
