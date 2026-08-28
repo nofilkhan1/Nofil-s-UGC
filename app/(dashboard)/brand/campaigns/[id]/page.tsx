@@ -1,10 +1,5 @@
 import Link from "next/link";
-import {
-  Camera as Instagram,
-  ExternalLink,
-  Music2,
-  UsersRound,
-} from "lucide-react";
+import { ExternalLink, UsersRound } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DecisionForm } from "@/components/decision-form";
 import { confirmDeliverableAction } from "@/app/actions";
@@ -20,6 +15,7 @@ import type {
   Profile,
 } from "@/lib/types";
 import { countNicheMatches } from "@/lib/niche-matching";
+import { SocialPlatformIcon } from "@/components/social-platform-icon";
 
 export const metadata = { title: "Campaign applicants" };
 type Applicant = Application & {
@@ -216,7 +212,7 @@ export default async function BrandCampaignDetail({
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Instagram size={15} aria-hidden="true" /> @
+                        <SocialPlatformIcon platform="instagram" /> @
                         {details.instagram_handle}
                       </a>
                     ) : null}
@@ -227,7 +223,7 @@ export default async function BrandCampaignDetail({
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Music2 size={15} aria-hidden="true" /> @
+                        <SocialPlatformIcon platform="tiktok" /> @
                         {details.tiktok_handle}
                       </a>
                     ) : null}
