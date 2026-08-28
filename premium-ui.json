@@ -1,0 +1,21 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["app", "components", "lib"],
+  "locale": "en",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": ["Select/Listbox", "Date", "Form", "Scrollbar", "Toast", "CRUD"],
+  "ownership": {
+    "Select/Listbox": "authored",
+    "Date": "typed"
+  },
+  "requiredCommands": ["unit", "accessibility", "premium"],
+  "commands": {
+    "unit": "npm test",
+    "accessibility": "npm run test:a11y",
+    "premium": "npm run verify:premium"
+  },
+  "evidence": {
+    "crudFullFlow": "tests/workflows.test.ts",
+    "failurePaths": "tests/validation.test.ts"
+  }
+}

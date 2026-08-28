@@ -1,0 +1,41 @@
+{
+  "name": "creator-dock",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:a11y": "vitest run tests/accessibility.test.tsx",
+    "verify:premium": "node scripts/verify-ui.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "latest",
+    "@fontsource-variable/manrope": "latest",
+    "@radix-ui/react-select": "latest",
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "clsx": "latest",
+    "lucide-react": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "jsdom": "^29.1.1",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="page-frame" style={{ minHeight: "12rem", display: "grid", placeItems: "center" }} role="status"><span className="button__spinner" aria-hidden="true" /><span className="sr-only">Loading CreatorDock</span></div>; }

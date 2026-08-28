@@ -1,0 +1,25 @@
+import Link from "next/link";
+import { ExternalLink, UsersRound } from "lucide-react";
+import { notFound } from "next/navigation";
+import { DecisionForm } from "@/components/decision-form";
+import { EmptyState } from "@/components/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { requireRole } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+import type { Application, Campaign, CreatorProfile, Profile } from "@/lib/types";
+
+export const metadata = { title: "Campaign applicants" };
+type Applicant = Application & { creator: Profile & { creator_profiles: CreatorProfile[] } };
+
+export default async function BrandCampaignDetail({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ published?: string }> }) {
+  const viewer = await requireRole("brand");
+  const { id } = await params;
+  const query = await searchParams;
+  const supabase = await createClient();
+  const { data: campaign } = await supabase.from("campaigns").select("*").eq("id", id).eq("brand_id", viewer.user.id).single();
+  if (!campaign) notFound();
+  const { data: applications, error } = await supabase.from("applications").select("*, creator:profiles!applications_creator_id_fkey(*, creator_profiles(*))").eq("campaign_id", id).order("created_at", { ascending: false });
+  const typedCampaign = campaign as Campaign;
+  const applicants = (applications ?? []) as Applicant[];
+  return <div className="stack" style={{ gap: "1.7rem" }}><div><Link href="/brand/campaigns" className="muted">← Campaigns</Link>{query.published === "1" ? <div className="notice notice--success" role="status" style={{ marginTop: "1rem" }}>Campaign published. Creators can now discover and apply to it.</div> : null}<div className="cluster" style={{ justifyContent: "space-between", marginTop: "1rem" }}><div><span className={`badge badge--${typedCampaign.platform}`}>{typedCampaign.platform}</span><h1 className="page-title" style={{ marginTop: "0.7rem" }}>{typedCampaign.title}</h1><p className="muted">{typedCampaign.post_count} × {typedCampaign.content_format} · {typedCampaign.start_date} to {typedCampaign.end_date}</p></div><StatusBadge status={typedCampaign.status} /></div><div className="panel"><p style={{ whiteSpace: "pre-wrap", marginBottom: 0 }}>{typedCampaign.description}</p></div></div><section className="stack"><div className="cluster"><UsersRound aria-hidden="true" /><div><h2 className="section-title">Applicants</h2><p className="muted" style={{ margin: 0 }}>{applicants.length} creator{applicants.length === 1 ? "" : "s"} applied</p></div></div>{error ? <div className="notice notice--error" role="alert">Applicants could not be loaded. Refresh to try again.</div> : applicants.length === 0 ? <EmptyState title="No applications yet" message="This campaign is live. Creator profiles and quotes will appear here as applications arrive." /> : <div className="stack">{applicants.map((application) => { const details = application.creator.creator_profiles?.[0]; return <article className="panel" key={application.id}><div className="cluster" style={{ justifyContent: "space-between", alignItems: "flex-start" }}><div className="mini-profile"><span className="avatar" aria-hidden="true">{application.creator.display_name.slice(0, 2).toUpperCase()}</span><span><h3 style={{ marginBottom: "0.1rem" }}>{application.creator.display_name}</h3><span className="muted">{details?.age ? `Age ${details.age}` : "Age not shared"}{details?.gender ? ` · ${details.gender.replaceAll("_", " ")}` : ""}</span></span></div><div style={{ textAlign: "right" }}><strong style={{ fontSize: "1.25rem", fontVariantNumeric: "tabular-nums" }}>{application.currency} {Number(application.price_per_post).toLocaleString("en")}</strong><small className="muted" style={{ display: "block" }}>per post</small></div></div>{details?.bio ? <p style={{ marginTop: "1rem" }}>{details.bio}</p> : null}<div className="cluster">{details?.portfolio_url ? <a className="button button--secondary" href={details.portfolio_url} target="_blank" rel="noreferrer">Portfolio <ExternalLink size={15} aria-hidden="true" /></a> : null}{details?.instagram_url ? <a className="button button--ghost" href={details.instagram_url} target="_blank" rel="noreferrer">Instagram</a> : null}{details?.tiktok_url ? <a className="button button--ghost" href={details.tiktok_url} target="_blank" rel="noreferrer">TikTok</a> : null}</div>{application.note ? <div className="notice" style={{ marginTop: "1rem" }}><strong>Creator note</strong><p style={{ margin: "0.3rem 0 0" }}>{application.note}</p></div> : null}<div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--color-border)" }}>{application.status === "pending" ? <DecisionForm applicationId={application.id} /> : <StatusBadge status={application.status} />}</div></article>; })}</div>}</section></div>;
+}

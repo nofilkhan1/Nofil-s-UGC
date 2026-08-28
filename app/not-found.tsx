@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <main className="page-frame" style={{ paddingBlock: "6rem" }}><p className="eyebrow">404</p><h1 className="page-title">This page is not on the roster.</h1><p className="muted">The page may have moved or the campaign may no longer be available.</p><Link className="button button--primary" href="/dashboard">Go to dashboard</Link></main>; }
