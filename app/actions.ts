@@ -122,3 +122,15 @@ export async function inviteCreatorAction(_state: ActionState, formData: FormDat
   revalidatePath("/notifications");
   return { status: "success", message: "Invite sent." };
 }
+
+export async function sendMessageAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const viewer = await requireViewer();
+  const applicationId = String(formData.get("applicationId") ?? "");
+  const body = String(formData.get("body") ?? "").trim();
+  if (!/^[0-9a-f-]{36}$/i.test(applicationId) || !body || body.length > 2000) return { status: "error", message: "Write a message up to 2,000 characters." };
+  const supabase = await createClient();
+  const { error } = await supabase.from("messages").insert({ application_id: applicationId, sender_id: viewer.user.id, body });
+  if (error) return { status: "error", message: "Message could not be sent. Messaging is available after approval." };
+  revalidatePath(`/messages/${applicationId}`);
+  return { status: "success", message: "Message sent." };
+}
