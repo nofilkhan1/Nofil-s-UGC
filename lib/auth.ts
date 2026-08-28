@@ -24,7 +24,7 @@ export async function requireRole(role: UserRole | UserRole[]) {
 }
 
 export function roleHome(role: UserRole) {
-  if (role === "brand") return "/brand/campaigns";
+  if (role === "brand") return "/brand/dashboard";
   if (role === "creator") return "/creator/campaigns";
   return "/admin";
 }
