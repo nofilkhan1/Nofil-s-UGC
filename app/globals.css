@@ -214,6 +214,16 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .metric { border-radius: var(--radius-sm); background: #f4f6fa; padding: 0.65rem; }
 .metric strong { display: block; }
 .how-it-works { padding-block: 5rem; }
+.trust-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding-block: 2.5rem; border-bottom: 1px solid var(--color-border); }
+.trust-row article { display: grid; gap: 0.25rem; border-left: 3px solid var(--color-primary); padding-left: 0.8rem; }
+.trust-row strong { font-family: var(--font-display); }
+.trust-row span { font-size: 0.82rem; }
+.public-footer { border-top: 1px solid var(--color-border); background: var(--color-surface); padding-top: 2.5rem; }
+.public-footer__inner { display: flex; align-items: start; justify-content: space-between; gap: 2rem; }
+.public-footer__inner p { margin: 0.8rem 0 0; }
+.public-footer__links { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; font-weight: 700; }
+.public-footer__links a:hover { color: var(--color-primary-dark); }
+.public-footer__copyright { border-top: 1px solid var(--color-border); margin-top: 2rem; padding-block: 1.2rem; color: var(--color-muted-ink); font-size: 0.78rem; }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
 .step { border-top: 3px solid var(--color-primary); padding-top: 1.2rem; }
 .step:nth-child(2) { border-color: var(--color-accent); }
@@ -248,6 +258,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .casting-stack { animation: reveal 450ms 100ms ease-out both; }
 
 @media (max-width: 920px) {
+  .trust-row { grid-template-columns: repeat(2, 1fr); }
   .campaign-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero__grid { grid-template-columns: 1fr; padding-top: 3rem; }
   .casting-stack { width: min(100%, 34rem); margin-inline: auto; }
@@ -265,6 +276,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 }
 
 @media (max-width: 580px) {
+  .trust-row { grid-template-columns: 1fr; }
+  .public-footer__inner { display: grid; }
   .campaign-grid { grid-template-columns: 1fr; }
   .hero__title { font-size: clamp(3rem, 16vw, 4.7rem); }
   .casting-stack { min-height: 28rem; }
