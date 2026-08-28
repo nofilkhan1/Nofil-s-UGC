@@ -23,6 +23,7 @@ export type Campaign = {
   end_date: string;
   status: CampaignStatus;
   created_at: string;
+  view_count?: number;
   niches: import("@/lib/niches").Niche[];
   brand?: { display_name: string } | null;
 };

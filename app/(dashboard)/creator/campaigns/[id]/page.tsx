@@ -13,6 +13,7 @@ export default async function CreatorCampaignDetail({ params }: { params: Promis
   const viewer = await requireRole("creator");
   const { id } = await params;
   const supabase = await createClient();
+  await supabase.rpc("increment_campaign_view", { target_campaign_id: id });
   const { data } = await supabase.from("campaigns").select("*, brand:profiles!campaigns_brand_id_fkey(display_name)").eq("id", id).single();
   if (!data) notFound();
   const campaign = data as Campaign;

@@ -80,7 +80,7 @@ export default async function BrandCampaignDetail({
             </h1>
             <p className="muted">
               {typedCampaign.post_count} × {typedCampaign.content_format} ·{" "}
-              {typedCampaign.start_date} to {typedCampaign.end_date}
+              {typedCampaign.start_date} to {typedCampaign.end_date} · {typedCampaign.view_count ?? 0} views
             </p>
           </div>
           <StatusBadge status={typedCampaign.status} />
@@ -244,7 +244,17 @@ export default async function BrandCampaignDetail({
                     {application.status === "pending" ? (
                       <DecisionForm applicationId={application.id} />
                     ) : (
-                      <div className="cluster"><StatusBadge status={application.status} />{application.status === "approved" ? <Link className="button button--secondary" href={`/messages/${application.id}`}>Message</Link> : null}</div>
+                      <div className="cluster">
+                        <StatusBadge status={application.status} />
+                        {application.status === "approved" ? (
+                          <Link
+                            className="button button--secondary"
+                            href={`/messages/${application.id}`}
+                          >
+                            Message
+                          </Link>
+                        ) : null}
+                      </div>
                     )}
                   </div>
                 </article>
