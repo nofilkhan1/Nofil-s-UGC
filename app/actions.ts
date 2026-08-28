@@ -109,3 +109,16 @@ export async function openNotificationAction(formData: FormData) {
   revalidatePath("/notifications");
   if (href === "/creator/applications") redirect(href);
 }
+
+export async function inviteCreatorAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("brand");
+  const creatorId = String(formData.get("creatorId") ?? "");
+  const campaignId = String(formData.get("campaignId") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(creatorId) || !/^[0-9a-f-]{36}$/i.test(campaignId)) return { status: "error", message: "Choose a valid creator and campaign." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("send_campaign_invite", { target_creator_id: creatorId, target_campaign_id: campaignId });
+  if (error) return { status: "error", message: "Invite could not be sent. Make sure the campaign is live, then try again." };
+  revalidatePath("/creator/notifications");
+  revalidatePath("/notifications");
+  return { status: "success", message: "Invite sent." };
+}

@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Bell, BriefcaseBusiness, ClipboardList, LayoutDashboard, UserRound } from "lucide-react";
+import { Bell, BriefcaseBusiness, ClipboardList, LayoutDashboard, Search, UserRound } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 import { SignOutButton } from "@/components/sign-out-button";
 import type { Profile } from "@/lib/types";
 
 const roleNavigation = {
   brand: [
+    { href: "/brand/discover", label: "Discover", icon: Search },
     { href: "/brand/campaigns", label: "Campaigns", icon: BriefcaseBusiness },
     { href: "/notifications", label: "Notifications", icon: Bell },
   ],

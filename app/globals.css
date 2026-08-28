@@ -165,6 +165,20 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .niche-pill input { accent-color: var(--color-primary); margin-right: 0.4rem; }
 
 .campaign-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.creator-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.creator-card { display: grid; gap: 1rem; min-width: 0; }
+.creator-card__bio { color: var(--color-muted-ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+.creator-card__links { border-top: 1px solid var(--color-border); padding-top: 0.85rem; }
+.creator-card__links a { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--color-primary-dark); font-size: 0.8rem; font-weight: 750; }
+.creator-card__links a:hover { text-decoration: underline; }
+.search-field { position: relative; display: flex; align-items: center; }
+.search-field svg { position: absolute; left: 0.8rem; color: var(--color-muted-ink); pointer-events: none; }
+.search-field .input { padding-left: 2.4rem; }
+.discover-toolbar { max-width: 32rem; }
+.invite-control { position: relative; }
+.invite-menu { position: absolute; z-index: 30; top: calc(100% + 0.5rem); right: 0; width: min(18rem, calc(100vw - 3rem)); display: grid; gap: 0.55rem; padding: 0.8rem; box-shadow: var(--shadow-raised); }
+.invite-menu__item { width: 100%; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-ink); padding: 0.65rem 0.7rem; text-align: left; font-weight: 700; }
+.invite-menu__item:hover { background: #f0efff; color: var(--color-primary-dark); }
 .campaign-card { position: relative; display: grid; min-height: 19rem; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
 .campaign-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 0.38rem; background: var(--platform-color, var(--color-primary)); }
 .campaign-card:hover { transform: translateY(-2px); border-color: #c9c4ff; box-shadow: 0 14px 34px rgba(42, 45, 89, 0.09); }
@@ -281,6 +295,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 @media (max-width: 920px) {
   .trust-row { grid-template-columns: repeat(2, 1fr); }
   .campaign-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .creator-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero__grid { grid-template-columns: 1fr; padding-top: 3rem; }
   .casting-stack { width: min(100%, 34rem); margin-inline: auto; }
   .auth-shell { grid-template-columns: 1fr; }
@@ -302,6 +317,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   .trust-row { grid-template-columns: 1fr; }
   .public-footer__inner { display: grid; }
   .campaign-grid { grid-template-columns: 1fr; }
+  .creator-grid { grid-template-columns: 1fr; }
   .hero__title { font-size: clamp(3rem, 16vw, 4.7rem); }
   .casting-stack { display: grid; width: 100%; min-height: auto; gap: 1rem; }
   .casting-card { position: relative; inset: auto; width: 100%; transform: none; }
