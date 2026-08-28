@@ -198,17 +198,22 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .data-table th { color: var(--color-muted-ink); background: #f9fafc; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; }
 .data-table tbody tr:hover { background: #fbfbff; }
 
-.hero { position: relative; overflow: hidden; min-height: 46rem; background: #f6f8fc; }
+.hero { position: relative; overflow: hidden; min-height: 46rem; background: radial-gradient(circle at 18% 18%, rgba(90, 79, 243, 0.12), transparent 34%), radial-gradient(circle at 86% 12%, rgba(240, 100, 73, 0.08), transparent 27%), #f6f8fc; }
 .public-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 5rem; }
 .hero__grid { display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: clamp(2rem, 6vw, 5rem); padding-block: 5rem 7rem; }
-.hero__title { max-width: 12ch; font-size: clamp(3.2rem, 7vw, 6.5rem); line-height: 0.93; margin-bottom: 1.5rem; }
+.hero__title { max-width: 12ch; font-size: clamp(3.2rem, 7vw, 6.5rem); line-height: 0.93; margin: 0.45rem 0 1.5rem; font-weight: 850; }
 .hero__title em { color: var(--color-primary); font-style: normal; }
 .hero__copy { max-width: 38rem; color: var(--color-muted-ink); font-size: clamp(1rem, 1.6vw, 1.2rem); }
+.hero__urgency { margin: 1.4rem 0 0; color: var(--color-primary-dark); font-size: 0.82rem; font-weight: 750; }
 .casting-stack { position: relative; min-height: 31rem; }
-.casting-card { position: absolute; width: min(100%, 25rem); border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: white; box-shadow: var(--shadow-raised); padding: 1.3rem; }
-.casting-card--one { top: 1rem; right: 0; transform: rotate(4deg); }
-.casting-card--two { top: 9rem; left: 0; transform: rotate(-3deg); }
-.casting-card--three { right: 1.5rem; bottom: 0; transform: rotate(1deg); }
+.casting-card { position: absolute; width: min(100%, 25rem); border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: white; box-shadow: var(--shadow-raised); padding: 1.3rem; transition: transform 220ms ease, box-shadow 220ms ease; animation: card-fade-in 600ms ease-out both; }
+.casting-card:hover { box-shadow: 0 22px 48px rgba(31, 42, 55, 0.15); }
+.casting-card--one { top: 1rem; right: 0; transform: rotate(4deg); animation-delay: 120ms; }
+.casting-card--one:hover { transform: rotate(4deg) translateY(-5px); }
+.casting-card--two { top: 9rem; left: 0; transform: rotate(-3deg); animation-delay: 260ms; }
+.casting-card--two:hover { transform: rotate(-3deg) translateY(-5px); }
+.casting-card--three { right: 1.5rem; bottom: 0; transform: rotate(1deg); animation-delay: 400ms; }
+.casting-card--three:hover { transform: rotate(1deg) translateY(-5px); }
 .casting-card__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .mini-profile { display: flex; align-items: center; gap: 0.75rem; }
 .mini-profile__avatar { width: 3rem; height: 3rem; border-radius: 50%; background: linear-gradient(145deg, #ffd2c7, #d8d3ff); }
@@ -217,7 +222,9 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .metric strong { display: block; }
 .how-it-works { padding-block: 5rem; }
 .trust-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding-block: 2.5rem; border-bottom: 1px solid var(--color-border); }
-.trust-row article { display: grid; gap: 0.25rem; border-left: 3px solid var(--color-primary); padding-left: 0.8rem; }
+.trust-row article { display: grid; gap: 0.25rem; border-left: 3px solid var(--color-primary); padding-left: 0.8rem; transition: color 180ms ease, border-color 180ms ease, transform 180ms ease; }
+.trust-row article svg { color: var(--color-primary); }
+.trust-row article:hover { color: var(--color-primary-dark); border-color: var(--color-primary-dark); transform: translateY(-2px); }
 .trust-row strong { font-family: var(--font-display); }
 .trust-row span { font-size: 0.82rem; }
 .public-footer { border-top: 1px solid var(--color-border); background: var(--color-surface); padding-top: 2.5rem; }
@@ -226,8 +233,10 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .public-footer__links { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; font-weight: 700; }
 .public-footer__links a:hover { color: var(--color-primary-dark); }
 .public-footer__copyright { border-top: 1px solid var(--color-border); margin-top: 2rem; padding-block: 1.2rem; color: var(--color-muted-ink); font-size: 0.78rem; }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.steps { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.steps::before { content: ""; position: absolute; top: 1.45rem; left: 10%; right: 10%; border-top: 1px solid var(--color-border-strong); z-index: 0; }
 .step { border-top: 3px solid var(--color-primary); padding-top: 1.2rem; }
+.step > * { position: relative; z-index: 1; }
 .step:nth-child(2) { border-color: var(--color-accent); }
 .step:nth-child(3) { border-color: var(--color-success); }
 
@@ -259,6 +268,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes card-fade-in { from { opacity: 0; } to { opacity: 1; } }
 .hero__content { animation: reveal 450ms ease-out both; }
 .casting-stack { animation: reveal 450ms 100ms ease-out both; }
 
@@ -278,6 +288,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   .nav-link { white-space: nowrap; }
   .app-topbar { position: static; }
   .steps { grid-template-columns: 1fr; }
+  .steps::before { display: none; }
   .detail-grid { grid-template-columns: 1fr; }
 }
 
@@ -298,4 +309,5 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .campaign-card:hover { transform: none; }
+  .casting-card { animation: none; }
 }
