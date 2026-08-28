@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applicationSchema, campaignSchema, signupSchema } from "@/lib/validation";
+import { filterAndSortCampaigns } from "@/lib/campaign-filters";
 
 describe("campaign validation", () => {
   const valid = {
@@ -28,6 +29,12 @@ describe("campaign validation", () => {
 });
 
 describe("account and application validation", () => {
+  it("combines browse search and popular sorting", () => {
+    const base = { id: "00000000-0000-0000-0000-000000000001", brand_id: "00000000-0000-0000-0000-000000000002", platform: "instagram" as const, content_format: "Reel", post_count: 1, start_date: "2026-01-01", end_date: "2026-01-02", status: "live" as const, niches: ["Beauty & Fashion"] as ["Beauty & Fashion"] };
+    const results = filterAndSortCampaigns([{ ...base, title: "Skincare launch", description: "A beauty brief", created_at: "2026-01-01", application_count: 1 }, { ...base, id: "00000000-0000-0000-0000-000000000003", title: "Gaming setup", description: "Tech products", created_at: "2026-02-01", application_count: 9 }], "beauty", "popular");
+    expect(results).toHaveLength(1);
+    expect(results[0].title).toBe("Skincare launch");
+  });
   it("does not allow admin as a signup role", () => {
     expect(signupSchema.safeParse({ name: "Admin", email: "admin@example.com", password: "password123", role: "admin" }).success).toBe(false);
   });
