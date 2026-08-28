@@ -9,6 +9,7 @@ import { FormField, TextAreaField } from "@/components/ui/form-field";
 import { SelectField } from "@/components/ui/select";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useUnsavedChanges } from "@/components/use-unsaved-changes";
+import { NichePicker } from "@/components/niche-picker";
 
 export function CampaignForm() {
   const [state, action] = useActionState(createCampaignAction, initialActionState);
@@ -19,6 +20,7 @@ export function CampaignForm() {
     {state.message ? <div className={`notice notice--${state.status}`} role={state.status === "error" ? "alert" : "status"}>{state.message}</div> : null}
     <FormField label="Campaign title" name="title" required maxLength={100} error={error("title")} hint="Use a specific working title creators can recognize." />
     <TextAreaField label="Campaign brief" name="description" required maxLength={3000} error={error("description")} hint="Describe the product, content angle, required talking points, and what success looks like." />
+    <NichePicker limit={3} error={error("niches")} />
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(13rem, 1fr))", gap: "1rem" }}>
       <SelectField name="platform" label="Platform" defaultValue="instagram" options={[{ value: "instagram", label: "Instagram" }, { value: "tiktok", label: "TikTok" }]} required />
       <FormField label="Content format" name="contentFormat" required maxLength={80} placeholder="Reel, carousel, TikTok video…" error={error("contentFormat")} />

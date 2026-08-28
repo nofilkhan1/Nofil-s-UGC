@@ -1,6 +1,6 @@
 export type UserRole = "brand" | "creator" | "admin";
 export type Platform = "instagram" | "tiktok";
-export type CampaignStatus = "draft" | "published" | "closed";
+export type CampaignStatus = "draft" | "live" | "closed";
 export type ApplicationStatus = "pending" | "approved" | "rejected";
 
 export type Profile = {
@@ -23,6 +23,7 @@ export type Campaign = {
   end_date: string;
   status: CampaignStatus;
   created_at: string;
+  niches: import("@/lib/niches").Niche[];
   brand?: { display_name: string } | null;
 };
 
@@ -34,6 +35,9 @@ export type CreatorProfile = {
   portfolio_url: string | null;
   instagram_url: string | null;
   tiktok_url: string | null;
+  instagram_handle: string | null;
+  tiktok_handle: string | null;
+  niches: import("@/lib/niches").Niche[];
 };
 
 export type Application = {
@@ -43,6 +47,7 @@ export type Application = {
   price_per_post: number;
   currency: string;
   note: string | null;
+  pitch: string | null;
   status: ApplicationStatus;
   created_at: string;
   decided_at: string | null;

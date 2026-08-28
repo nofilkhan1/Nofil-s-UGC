@@ -11,32 +11,50 @@ function validationState(error: { flatten: () => { fieldErrors: Record<string, s
   return { status: "error", message: "Check the fields marked below.", errors: error.flatten().fieldErrors };
 }
 
+function normalizeSocialHandle(value: unknown) {
+  const handle = String(value ?? "").trim().replace(/^@+/, "");
+  return handle || null;
+}
+
 export async function createCampaignAction(_state: ActionState, formData: FormData): Promise<ActionState> {
   const viewer = await requireRole("brand");
   const parsed = campaignSchema.safeParse({
     title: formData.get("title"), description: formData.get("description"), platform: formData.get("platform"),
     contentFormat: formData.get("contentFormat"), postCount: formData.get("postCount"), startDate: formData.get("startDate"), endDate: formData.get("endDate"),
+    niches: formData.getAll("niches"),
   });
   if (!parsed.success) return validationState(parsed.error);
   const supabase = await createClient();
   const { data, error } = await supabase.from("campaigns").insert({
     brand_id: viewer.user.id, title: parsed.data.title, description: parsed.data.description,
     platform: parsed.data.platform, content_format: parsed.data.contentFormat, post_count: parsed.data.postCount,
-    start_date: parsed.data.startDate, end_date: parsed.data.endDate, status: "published",
+    start_date: parsed.data.startDate, end_date: parsed.data.endDate, status: "draft",
+    niches: parsed.data.niches,
   }).select("id").single();
-  if (error || !data) return { status: "error", message: "The campaign was not published. Your entries are still here—try again." };
+  if (error || !data) return { status: "error", message: "The campaign draft could not be created. Your entries are still here—try again." };
   revalidatePath("/brand/campaigns");
-  redirect(`/brand/campaigns/${data.id}?published=1`);
+  redirect(`/brand/campaigns/${data.id}?created=1`);
+}
+
+export async function updateCampaignStatusAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const viewer = await requireRole("brand");
+  const campaignId = String(formData.get("campaignId") ?? ""); const status = String(formData.get("status") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(campaignId) || !["live", "closed"].includes(status)) return { status: "error", message: "Invalid campaign action." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("campaigns").update({ status }).eq("id", campaignId).eq("brand_id", viewer.user.id).in("status", status === "live" ? ["draft"] : ["live"]).select("id").maybeSingle();
+  if (error || !data) return { status: "error", message: "This campaign is already in a different state. Refresh to see its current status." };
+  revalidatePath("/brand/campaigns"); revalidatePath("/creator/campaigns"); revalidatePath(`/brand/campaigns/${campaignId}`); revalidatePath(`/creator/campaigns/${campaignId}`);
+  return { status: "success", message: status === "live" ? "Campaign is live for creators." : "Campaign closed. Existing applications are unchanged." };
 }
 
 export async function applyToCampaignAction(_state: ActionState, formData: FormData): Promise<ActionState> {
   const viewer = await requireRole("creator");
-  const parsed = applicationSchema.safeParse({ campaignId: formData.get("campaignId"), pricePerPost: formData.get("pricePerPost"), currency: formData.get("currency"), note: formData.get("note") });
+  const parsed = applicationSchema.safeParse({ campaignId: formData.get("campaignId"), pricePerPost: formData.get("pricePerPost"), currency: formData.get("currency"), note: formData.get("note"), pitch: formData.get("pitch") });
   if (!parsed.success) return validationState(parsed.error);
   const supabase = await createClient();
   const { error } = await supabase.from("applications").insert({
     campaign_id: parsed.data.campaignId, creator_id: viewer.user.id, price_per_post: parsed.data.pricePerPost,
-    currency: parsed.data.currency, note: parsed.data.note || null,
+    currency: parsed.data.currency, note: parsed.data.note || null, pitch: parsed.data.pitch || null,
   });
   if (error?.code === "23505") return { status: "error", message: "You already applied to this campaign. View it in My applications." };
   if (error) return { status: "error", message: "Your application was not sent. Your quote is still here—try again." };
@@ -49,6 +67,8 @@ export async function updateCreatorProfileAction(_state: ActionState, formData: 
   const parsed = creatorProfileSchema.safeParse({
     displayName: formData.get("displayName"), gender: formData.get("gender"), age: formData.get("age"), bio: formData.get("bio"),
     portfolioUrl: formData.get("portfolioUrl"), instagramUrl: formData.get("instagramUrl"), tiktokUrl: formData.get("tiktokUrl"),
+    instagramHandle: normalizeSocialHandle(formData.get("instagramHandle")), tiktokHandle: normalizeSocialHandle(formData.get("tiktokHandle")),
+    niches: formData.getAll("niches"),
   });
   if (!parsed.success) return validationState(parsed.error);
   const supabase = await createClient();
@@ -56,6 +76,8 @@ export async function updateCreatorProfileAction(_state: ActionState, formData: 
   const detailResult = await supabase.from("creator_profiles").update({
     gender: parsed.data.gender || null, age: parsed.data.age === "" ? null : parsed.data.age, bio: parsed.data.bio || null,
     portfolio_url: parsed.data.portfolioUrl || null, instagram_url: parsed.data.instagramUrl || null, tiktok_url: parsed.data.tiktokUrl || null,
+    instagram_handle: parsed.data.instagramHandle || null, tiktok_handle: parsed.data.tiktokHandle || null,
+    niches: parsed.data.niches,
   }).eq("user_id", viewer.user.id);
   if (profileResult.error || detailResult.error) return { status: "error", message: "Your profile was not saved. Your entries are still here—try again." };
   revalidatePath("/creator/profile");

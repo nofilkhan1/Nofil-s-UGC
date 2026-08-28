@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { NICHES } from "@/lib/niches";
+const nicheSchema = z.enum(NICHES);
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -11,6 +13,7 @@ export const campaignSchema = z
     postCount: z.coerce.number().int().min(1, "Request at least one post.").max(100),
     startDate: z.string().regex(isoDate, "Use YYYY-MM-DD."),
     endDate: z.string().regex(isoDate, "Use YYYY-MM-DD."),
+    niches: z.array(nicheSchema).min(1, "Choose at least one category.").max(3, "Choose up to three categories."),
   })
   .refine((data) => data.endDate >= data.startDate, {
     path: ["endDate"],
@@ -22,6 +25,7 @@ export const applicationSchema = z.object({
   pricePerPost: z.coerce.number().positive("Enter a price greater than zero.").max(1_000_000),
   currency: z.enum(["USD", "GBP", "EUR", "PKR"]),
   note: z.string().trim().max(500).optional(),
+  pitch: z.string().trim().max(300, "Keep your pitch to 300 characters or fewer.").optional(),
 });
 
 const optionalUrl = z.union([
@@ -37,6 +41,9 @@ export const creatorProfileSchema = z.object({
   portfolioUrl: optionalUrl,
   instagramUrl: optionalUrl,
   tiktokUrl: optionalUrl,
+  instagramHandle: z.string().trim().max(30).regex(/^[A-Za-z0-9._]*$/, "Use letters, numbers, periods, or underscores only."),
+  tiktokHandle: z.string().trim().max(30).regex(/^[A-Za-z0-9._]*$/, "Use letters, numbers, periods, or underscores only."),
+  niches: z.array(nicheSchema).min(1, "Choose at least one category.").max(5, "Choose up to five categories."),
 });
 
 export const signupSchema = z.object({

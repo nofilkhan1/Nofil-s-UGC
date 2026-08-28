@@ -10,6 +10,7 @@ describe("campaign validation", () => {
     postCount: 2,
     startDate: "2026-09-01",
     endDate: "2026-09-14",
+    niches: ["Beauty & Fashion"],
   };
 
   it("accepts a complete date-only campaign brief", () => {
@@ -33,5 +34,9 @@ describe("account and application validation", () => {
 
   it("requires a positive per-post quote", () => {
     expect(applicationSchema.safeParse({ campaignId: "8a4eec3b-5f08-491c-aeb0-5ce80362d3ab", pricePerPost: 0, currency: "USD", note: "" }).success).toBe(false);
+  });
+
+  it("accepts a concise optional application pitch", () => {
+    expect(applicationSchema.safeParse({ campaignId: "8a4eec3b-5f08-491c-aeb0-5ce80362d3ab", pricePerPost: 100, currency: "USD", note: "", pitch: "I make product demos that convert." }).success).toBe(true);
   });
 });
