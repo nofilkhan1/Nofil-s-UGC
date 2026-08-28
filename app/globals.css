@@ -175,6 +175,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .nav-list { display: grid; gap: 0.3rem; margin: 2rem 0; }
 .nav-link { display: flex; align-items: center; gap: 0.7rem; min-height: 2.75rem; border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; color: var(--color-muted-ink); font-weight: 680; }
 .nav-link:hover { background: #edf0ff; color: var(--color-primary-dark); }
+.notification-count { display: inline-grid; min-width: 1.2rem; height: 1.2rem; place-items: center; margin-left: auto; border-radius: 999px; background: var(--color-danger); color: white; font-size: 0.66rem; font-weight: 850; line-height: 1; padding-inline: 0.25rem; }
 .app-main { min-width: 0; }
 .app-topbar { position: sticky; z-index: 20; top: 0; display: flex; min-height: 4.2rem; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--color-border); background: rgba(244, 247, 251, 0.96); padding: 0.75rem clamp(1rem, 3vw, 2rem); }
 .app-content { width: min(100%, 78rem); padding: clamp(1.2rem, 4vw, 2.5rem); }
@@ -225,6 +226,14 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .toast { border: 1px solid var(--color-border); border-left: 4px solid var(--color-primary); border-radius: var(--radius-md); background: white; box-shadow: var(--shadow-raised); padding: 0.85rem 1rem; }
 .toast--success { border-left-color: var(--color-success); }
 .toast--error { border-left-color: var(--color-danger); }
+.notification-card { display: grid; width: 100%; grid-template-columns: auto minmax(0, 1fr); gap: 0.8rem; align-items: start; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-ink); padding: 1rem 1.1rem; text-align: left; }
+.notification-card:hover { border-color: var(--color-primary); background: #fafaff; }
+.notification-card--unread { border-left: 4px solid var(--color-primary); background: #f5f4ff; }
+.notification-card__copy { display: grid; gap: 0.3rem; color: var(--color-muted-ink); }
+.notification-card--unread .notification-card__copy { color: var(--color-ink); font-weight: 650; }
+.notification-card__top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; color: var(--color-ink); }
+.notification-card__copy small { color: var(--color-muted-ink); font-weight: 500; }
+.notification-dot { width: 0.55rem; height: 0.55rem; flex: none; border-radius: 50%; background: var(--color-danger); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }

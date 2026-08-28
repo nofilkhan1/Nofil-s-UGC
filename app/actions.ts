@@ -71,13 +71,19 @@ export async function decideApplicationAction(_state: ActionState, formData: For
   const { data, error } = await supabase.rpc("decide_application", { application_id: applicationId, decision });
   if (error || !data) return { status: "error", message: "The decision was not saved. Refresh to confirm its current status, then try again." };
   revalidatePath("/brand/campaigns");
+  revalidatePath("/creator/applications");
+  revalidatePath("/creator/notifications");
+  revalidatePath("/notifications");
   return { status: "success", message: decision === "approved" ? "Creator approved and notified." : "Application rejected and creator notified." };
 }
 
-export async function markNotificationReadAction(formData: FormData) {
+export async function openNotificationAction(formData: FormData) {
   const viewer = await requireViewer();
   const id = String(formData.get("notificationId") ?? "");
+  const href = String(formData.get("href") ?? "");
   const supabase = await createClient();
-  await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", id).eq("recipient_id", viewer.user.id);
+  await supabase.from("notifications").update({ read_at: new Date().toISOString(), is_read: true }).eq("id", id).eq("recipient_id", viewer.user.id);
+  revalidatePath("/creator/notifications");
   revalidatePath("/notifications");
+  if (href === "/creator/applications") redirect(href);
 }

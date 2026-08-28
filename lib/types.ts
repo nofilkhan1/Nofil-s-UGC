@@ -47,3 +47,16 @@ export type Application = {
   created_at: string;
   decided_at: string | null;
 };
+
+export type Notification = {
+  id: string;
+  recipient_id: string;
+  type: string;
+  title: string;
+  message: string;
+  href: string | null;
+  related_application_id: string | null;
+  is_read: boolean;
+  read_at: string | null;
+  created_at: string;
+};
