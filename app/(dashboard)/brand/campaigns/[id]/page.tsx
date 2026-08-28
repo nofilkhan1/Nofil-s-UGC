@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DecisionForm } from "@/components/decision-form";
+import { confirmDeliverableAction } from "@/app/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { requireRole } from "@/lib/auth";
@@ -230,6 +232,8 @@ export default async function BrandCampaignDetail({
                       </a>
                     ) : null}
                   </div>
+                  {application.status === "approved" && details?.top_content_links?.filter(Boolean).length ? <div className="cluster top-content-links">{details.top_content_links.filter(Boolean).map((url, index) => <a className="button button--ghost" href={url} target="_blank" rel="noreferrer" key={url}>Top video {index + 1}</a>)}</div> : null}
+                  {application.status === "approved" ? application.delivery_status === "submitted" || application.delivery_status === "confirmed" ? <div className="notice" style={{ marginTop: "1rem" }}><strong>{application.delivery_status === "confirmed" ? "Delivered ✓" : "Deliverable submitted"}</strong>{application.deliverable_url ? <p style={{ margin: "0.3rem 0 0" }}><a href={application.deliverable_url} target="_blank" rel="noreferrer">View submitted content</a></p> : null}{application.delivery_status === "submitted" ? <form action={async (formData) => { await confirmDeliverableAction({ status: "idle" }, formData); }} style={{ marginTop: "0.75rem" }}><input type="hidden" name="applicationId" value={application.id} /><SubmitButton intent="success">Confirm delivery</SubmitButton></form> : null}</div> : <p className="muted" style={{ marginTop: "1rem" }}>Awaiting deliverable</p> : null}
                   {application.note ? (
                     <div className="notice" style={{ marginTop: "1rem" }}>
                       <strong>Creator note</strong>

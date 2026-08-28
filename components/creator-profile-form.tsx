@@ -30,6 +30,7 @@ export function CreatorProfileForm({ profile, details }: { profile: Profile; det
     </div>
     <FormField label="Instagram profile URL" name="instagramUrl" type="url" inputMode="url" defaultValue={details.instagram_url ?? ""} error={error("instagramUrl")} placeholder="https://instagram.com/…" />
     <FormField label="TikTok profile URL" name="tiktokUrl" type="url" inputMode="url" defaultValue={details.tiktok_url ?? ""} error={error("tiktokUrl")} placeholder="https://tiktok.com/@…" />
+    <fieldset className="top-content-fields"><legend className="field__label">Top content <span className="muted">(optional, up to 3)</span></legend>{[0, 1, 2].map((index) => <FormField key={index} label={`Top video ${index + 1}`} name="topContentLinks" type="url" defaultValue={details.top_content_links?.[index] ?? ""} error={error("topContentLinks")} placeholder="https://…" />)}</fieldset>
     <SubmitButton>Save profile</SubmitButton>
   </form>;
 }

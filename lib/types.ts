@@ -39,6 +39,7 @@ export type CreatorProfile = {
   instagram_handle: string | null;
   tiktok_handle: string | null;
   niches: import("@/lib/niches").Niche[];
+  top_content_links?: string[];
 };
 
 export type Application = {
@@ -52,6 +53,9 @@ export type Application = {
   status: ApplicationStatus;
   created_at: string;
   decided_at: string | null;
+  deliverable_url?: string | null;
+  deliverable_submitted_at?: string | null;
+  delivery_status?: "not_submitted" | "submitted" | "confirmed";
 };
 
 export type Notification = {

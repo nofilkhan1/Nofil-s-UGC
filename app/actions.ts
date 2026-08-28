@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole, requireViewer } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { applicationSchema, campaignSchema, creatorProfileSchema } from "@/lib/validation";
+import { applicationSchema, campaignSchema, creatorProfileSchema, deliverableSchema } from "@/lib/validation";
 import type { ActionState } from "@/lib/action-state";
 
 function validationState(error: { flatten: () => { fieldErrors: Record<string, string[]> } }): ActionState {
@@ -68,6 +68,7 @@ export async function updateCreatorProfileAction(_state: ActionState, formData: 
     displayName: formData.get("displayName"), gender: formData.get("gender"), age: formData.get("age"), bio: formData.get("bio"),
     portfolioUrl: formData.get("portfolioUrl"), instagramUrl: formData.get("instagramUrl"), tiktokUrl: formData.get("tiktokUrl"),
     instagramHandle: normalizeSocialHandle(formData.get("instagramHandle")), tiktokHandle: normalizeSocialHandle(formData.get("tiktokHandle")),
+    topContentLinks: formData.getAll("topContentLinks"),
     niches: formData.getAll("niches"),
   });
   if (!parsed.success) return validationState(parsed.error);
@@ -77,11 +78,33 @@ export async function updateCreatorProfileAction(_state: ActionState, formData: 
     gender: parsed.data.gender || null, age: parsed.data.age === "" ? null : parsed.data.age, bio: parsed.data.bio || null,
     portfolio_url: parsed.data.portfolioUrl || null, instagram_url: parsed.data.instagramUrl || null, tiktok_url: parsed.data.tiktokUrl || null,
     instagram_handle: parsed.data.instagramHandle || null, tiktok_handle: parsed.data.tiktokHandle || null,
-    niches: parsed.data.niches,
+    niches: parsed.data.niches, top_content_links: parsed.data.topContentLinks.filter(Boolean),
   }).eq("user_id", viewer.user.id);
   if (profileResult.error || detailResult.error) return { status: "error", message: "Your profile was not saved. Your entries are still here—try again." };
   revalidatePath("/creator/profile");
   return { status: "success", message: "Profile saved." };
+}
+
+export async function submitDeliverableAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const viewer = await requireRole("creator");
+  const parsed = deliverableSchema.safeParse({ applicationId: formData.get("applicationId"), deliverableUrl: formData.get("deliverableUrl") });
+  if (!parsed.success) return validationState(parsed.error);
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("submit_application_deliverable", { target_application_id: parsed.data.applicationId, target_creator_id: viewer.user.id, submitted_url: parsed.data.deliverableUrl });
+  if (error) return { status: "error", message: "The deliverable could not be submitted. Make sure the application is approved." };
+  revalidatePath("/creator/applications"); revalidatePath("/brand/campaigns");
+  return { status: "success", message: "Deliverable submitted." };
+}
+
+export async function confirmDeliverableAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const viewer = await requireRole("brand");
+  const applicationId = String(formData.get("applicationId") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(applicationId)) return { status: "error", message: "Invalid application." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("confirm_application_deliverable", { target_application_id: applicationId, target_brand_id: viewer.user.id });
+  if (error) return { status: "error", message: "Delivery confirmation failed. Refresh and try again." };
+  revalidatePath("/brand/campaigns"); revalidatePath("/creator/applications"); revalidatePath("/creator/notifications");
+  return { status: "success", message: "Delivery confirmed and creator notified." };
 }
 
 export async function decideApplicationAction(_state: ActionState, formData: FormData): Promise<ActionState> {

@@ -32,6 +32,9 @@ const optionalUrl = z.union([
   z.literal(""),
   z.string().url("Enter a complete URL beginning with https://"),
 ]);
+const httpUrl = z.string().trim().refine((value) => /^https?:\/\//i.test(value), "Use a link beginning with http:// or https://.");
+
+export const deliverableSchema = z.object({ applicationId: z.string().uuid(), deliverableUrl: httpUrl.url("Enter a complete http:// or https:// URL.") });
 
 export const creatorProfileSchema = z.object({
   displayName: z.string().trim().min(2, "Enter your name.").max(80),
@@ -43,6 +46,7 @@ export const creatorProfileSchema = z.object({
   tiktokUrl: optionalUrl,
   instagramHandle: z.string().trim().max(30).regex(/^[A-Za-z0-9._]*$/, "Use letters, numbers, periods, or underscores only."),
   tiktokHandle: z.string().trim().max(30).regex(/^[A-Za-z0-9._]*$/, "Use letters, numbers, periods, or underscores only."),
+  topContentLinks: z.array(optionalUrl).max(3).default([]),
   niches: z.array(nicheSchema).min(1, "Choose at least one category.").max(5, "Choose up to five categories."),
 });
 

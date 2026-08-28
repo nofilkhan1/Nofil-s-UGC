@@ -154,6 +154,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.025em; line-he
 .badge--warning { color: #8d4a12; background: #fff7e9; border-color: #f1d19d; }
 .badge--danger { color: #9c3040; background: #fff0f2; border-color: #efbdc5; }
 .badge--neutral { color: var(--color-muted-ink); background: #f3f5f8; border-color: var(--color-border-strong); }
+.badge--info { color: #245a8d; background: #edf6ff; border-color: #b9d8f2; }
+.badge--confirmed { color: #075b45; background: #dff7ed; border-color: #9edcc6; }
 .badge--active { color: white; background: var(--color-primary); border-color: var(--color-primary); }
 .badge--instagram { color: #4338ca; background: #f0efff; border-color: #cdc9ff; }
 .badge--tiktok { color: #a13c28; background: #fff1ed; border-color: #f3c5bb; }

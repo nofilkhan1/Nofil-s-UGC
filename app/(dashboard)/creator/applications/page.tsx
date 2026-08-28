@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { DeliverableForm } from "@/components/deliverable-form";
 import { requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { Application, Campaign } from "@/lib/types";
@@ -27,9 +28,20 @@ export default async function CreatorApplicationsPage({
     .order("created_at", { ascending: false })
     .limit(50);
   const applications = (data ?? []) as CreatorApplication[];
-  const approvedIds = applications.filter((application) => application.status === "approved").map((application) => application.id);
-  const unreadRows = approvedIds.length ? await supabase.from("messages").select("application_id").in("application_id", approvedIds).is("read_at", null).neq("sender_id", viewer.user.id) : { data: [] };
-  const unreadApplicationIds = new Set((unreadRows.data ?? []).map((message) => message.application_id));
+  const approvedIds = applications
+    .filter((application) => application.status === "approved")
+    .map((application) => application.id);
+  const unreadRows = approvedIds.length
+    ? await supabase
+        .from("messages")
+        .select("application_id")
+        .in("application_id", approvedIds)
+        .is("read_at", null)
+        .neq("sender_id", viewer.user.id)
+    : { data: [] };
+  const unreadApplicationIds = new Set(
+    (unreadRows.data ?? []).map((message) => message.application_id),
+  );
   return (
     <div className="stack" style={{ gap: "1.7rem" }}>
       <div>
@@ -92,7 +104,13 @@ export default async function CreatorApplicationsPage({
                       className="button button--secondary"
                       href={`/messages/${application.id}`}
                     >
-                      Message{unreadApplicationIds.has(application.id) ? <span className="message-unread-dot" aria-label="Unread messages" /> : null}
+                      Message
+                      {unreadApplicationIds.has(application.id) ? (
+                        <span
+                          className="message-unread-dot"
+                          aria-label="Unread messages"
+                        />
+                      ) : null}
                     </Link>
                   ) : null}
                 </div>
@@ -133,6 +151,7 @@ export default async function CreatorApplicationsPage({
                 >
                   You were selected. Review the brief and campaign dates, then
                   fulfill the listed requirements.
+                  {application.delivery_status === "confirmed" ? <p><strong>Delivered ✓</strong>{application.deliverable_url ? <> · <a href={application.deliverable_url} target="_blank" rel="noreferrer">View deliverable</a></> : null}</p> : application.delivery_status === "submitted" ? <p><strong>Submitted — awaiting confirmation</strong>{application.deliverable_url ? <> · <a href={application.deliverable_url} target="_blank" rel="noreferrer">View deliverable</a></> : null}</p> : <div style={{ marginTop: "0.75rem" }}><DeliverableForm applicationId={application.id} /></div>}
                 </div>
               ) : null}
             </article>
