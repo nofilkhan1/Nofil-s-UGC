@@ -40,6 +40,16 @@ describe("account and application validation", () => {
   it("counts overlapping campaign and creator niches", () => {
     expect(countNicheMatches(["Beauty & Fashion", "Travel"], ["Travel", "Gaming"])).toBe(1);
   });
+  it("ranks recommended campaigns by creator niche overlap, then recency", () => {
+    const base = { id: "00000000-0000-0000-0000-000000000001", brand_id: "00000000-0000-0000-0000-000000000002", platform: "instagram" as const, content_format: "Reel", post_count: 1, start_date: "2026-01-01", end_date: "2026-01-02", status: "live" as const };
+    const results = filterAndSortCampaigns([
+      { ...base, title: "One match", description: "", created_at: "2026-01-01", niches: ["Travel"] as ["Travel"] },
+      { ...base, id: "00000000-0000-0000-0000-000000000003", title: "Two matches", description: "", created_at: "2026-01-02", niches: ["Travel", "Gaming"] as ["Travel", "Gaming"] },
+      { ...base, id: "00000000-0000-0000-0000-000000000004", title: "No match", description: "", created_at: "2026-01-03", niches: ["Finance"] as ["Finance"] },
+    ], "", "recommended", ["Travel", "Gaming"]);
+    expect(results.map((campaign) => campaign.title)).toEqual(["Two matches", "One match", "No match"]);
+    expect(filterAndSortCampaigns(results, "", "recommended").map((campaign) => campaign.title)).toEqual(["No match", "Two matches", "One match"]);
+  });
   it("does not allow admin as a signup role", () => {
     expect(signupSchema.safeParse({ name: "Admin", email: "admin@example.com", password: "password123", role: "admin" }).success).toBe(false);
   });

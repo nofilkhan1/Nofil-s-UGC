@@ -24,7 +24,7 @@ export function CampaignCard({ campaign, href, meta, appliedStatus }: { campaign
           <h2 className="campaign-card__title"><Link href={href}>{campaign.title}</Link></h2>
         </div>
         <p className="campaign-card__description">{campaign.description}</p>
-        <div className="niche-badges">{campaign.niches?.map((niche) => <span className="badge" key={niche}>{niche}</span>)}</div>
+        <div className="niche-badges">{campaign.niches?.map((niche) => <span className="badge" key={niche}>{niche}</span>)}{(campaign as Campaign & { niche_match_count?: number }).niche_match_count ? <span className="badge badge--instagram">{(campaign as Campaign & { niche_match_count: number }).niche_match_count} niche match{(campaign as Campaign & { niche_match_count: number }).niche_match_count === 1 ? "" : "es"}</span> : null}</div>
         <div className="campaign-card__requirements">
           <span className="requirement"><span className="requirement__label"><Layers3 size={12} aria-hidden="true" /> Deliverables</span><span className="requirement__value">{campaign.post_count} × {campaign.content_format}</span></span>
           <span className="requirement"><span className="requirement__label"><CalendarDays size={12} aria-hidden="true" /> Run dates</span><span className="requirement__value">{displayDate(campaign.start_date)} – {displayDate(campaign.end_date)}</span></span>
